@@ -1,0 +1,23 @@
+.containerForm {
+  background-color: rgba(245, 245, 245, 0.524);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  z-index: 10;
+
+
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  padding-top: 35px;
+}
+
+.react-datepicker-wrapper input{
+  margin-top: 25px;
+}
+

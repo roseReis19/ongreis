@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id String @id @default(uuid())
+  name String
+  limit Int?
+  users User[] @relation("company")
+
+  @@map("companies")
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String
+  password String
+  date_of_birth String
+  gender String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  results Result[] @relation("user")
+  company Company @relation("company", fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  @@map("users")
+}
+
+model Result {
+  id Int @id @default(autoincrement())
+  questionnaire Questionnaire @relation("questionnaire", fields: [questionnaireId], references: [id], onDelete: Cascade)
+  questionnaireId Int
+  indicators ResultIndicator[] @relation("result")
+  user User @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@map("results")
+}
+
+model ResultIndicator { 
+  id Int @id @default(autoincrement())
+  indicator String
+  percentage Int
+  result Result @relation("result", fields: [resultId], references: [id], onDelete: Cascade)
+  resultId Int
+}
+
+model Questionnaire {
+  id       Int       @id @default(autoincrement())
+  name     String
+  domains Domain[] @relation("questionnaire")
+  results Result[] @relation("questionnaire")
+
+  @@map("questionnaires")
+}
+
+model Domain {
+  id             Int          @id @default(autoincrement())
+  name           String
+  indicators    Indicator[] @relation("domain")
+  questionnaire   Questionnaire @relation("questionnaire",fields: [questionnaireId], references: [id], onDelete: Cascade)
+  questionnaireId Int
+
+  @@map("domains")
+}
+
+model Indicator {
+  id        Int        @id @default(autoincrement())
+  name      String?
+  weight    Float?
+  grade      Int?
+  criterion  String?
+  questions Question[] @relation("indicator")
+  domain   Domain    @relation("domain",fields: [domainId], references: [id], onDelete: Cascade)
+  domainId Int
+
+  @@map("indicators")
+}
+
+model Question {
+  id          Int       @id @default(autoincrement())
+  statement   String
+  item        String?
+  options      Option[] @relation("question")
+  indicator   Indicator @relation("indicator",fields: [indicatorId], references: [id], onDelete: Cascade)
+  indicatorId Int
+
+   @@map("questions")
+}
+
+model Option {
+  id         Int      @id @default(autoincrement())
+  text      String
+  score  Int
+  question   Question @relation("question",fields: [questionId], references: [id], onDelete: Cascade)
+  questionId Int
+}
