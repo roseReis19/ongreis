@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import {NotificationManager} from 'react-notifications';
 
-import { Typography } from "@mui/material";
+import { MenuItem, Select, Typography } from "@mui/material";
 
 export default function Form({ admin = false, login = false }) {
 
@@ -19,6 +19,7 @@ export default function Form({ admin = false, login = false }) {
     email: "",
     password: "",
     senha: "",
+    gender: ""
   });
 
   const twelveYearsAgo = new Date();
@@ -123,6 +124,10 @@ export default function Form({ admin = false, login = false }) {
       errors.senha = "La contraseña es obligatoria";
     }
 
+    if (!login && formData.genero === '') {
+      errors.senha = "O genero é obligatorio";
+    }
+
     setFormErrors(errors);
 
     return errors;
@@ -218,6 +223,18 @@ export default function Form({ admin = false, login = false }) {
               }}
               max={maxDate}
             />
+               <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={formData.gender}
+          name="gender"
+          onChange={handleInputChange}
+          style={{marginTop: 10}}
+        >
+          <MenuItem value="">Seleccione genero</MenuItem>
+          <MenuItem value="masculino">masculino</MenuItem>
+          <MenuItem value="femenino">femenino</MenuItem>
+        </Select>
             {formErrors.senha && (
               <Typography variant="body2" color="error">
                 {formErrors.senha}

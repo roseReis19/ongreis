@@ -3,15 +3,50 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-export default function SendCompany(){
+export default function SendCompany({setCompany, company}){
     const [stringInput, setStringInput] = useState("");
     const [numberInput, setNumberInput] = useState(0);
 
     
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("String Input:", stringInput);
     console.log("Number Input:", numberInput);
+
+    if(numberInput === 0){
+      setNumberInput(null)
+    }
+
+    if(stringInput === ''){
+      return
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/api/empresa", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', 
+        },
+        body: JSON.stringify({
+          name : stringInput,
+          limit: Number(numberInput)
+        }) 
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const responseData = await response.json(); 
+      console.log('POST request succeeded:', responseData);
+
+      setCompany([...company, responseData])
+      setNumberInput('0')
+      setStringInput('')
+
+    } catch (error) {
+      console.log(error)
+    }
   };
 
 

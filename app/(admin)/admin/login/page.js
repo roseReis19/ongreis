@@ -1,8 +1,18 @@
 import Form from '@/app/components/form'
+import { getServerSession } from 'next-auth';
 import Image from "next/image";
+import { redirect } from 'next/navigation';
+import { authOptions } from "../../api/auth/[...nextauth]/route"
 
+export default  async function LoginAdmin() {  
+  const session =  await getServerSession(authOptions);
+  if(session !== null && session.user.company !== 'admin'){
+    redirect("/platform")
+  }
 
-export default function LoginAdmin() {  
+  if(session !== null && session.user.company === 'admin'){
+    redirect("/panel")
+  }
 
     return (
       <main >

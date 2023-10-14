@@ -1,7 +1,8 @@
 -- CreateTable
 CREATE TABLE "companies" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL
+    "name" TEXT NOT NULL,
+    "limit" INTEGER
 );
 
 -- CreateTable
@@ -11,6 +12,7 @@ CREATE TABLE "users" (
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "date_of_birth" TEXT NOT NULL,
+    "gender" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
     "companyId" TEXT NOT NULL,

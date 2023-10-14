@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -11,15 +11,21 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useRouter } from "next/navigation";
 
 export default function PanelSaved() {
   const [open, setOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
   const [selectedName, setSelectedName] = useState("");
-  const [selectedAction, setSelectedAction] = useState(""); // "delete" o "edit"
+  const [selectedAction, setSelectedAction] = useState(""); 
+  const [questionnaires, setQuestionnaires] = useState([]);
+  const router = useRouter()
 
-  const handleActionClick = (id, name, action) => {
-    setSelectedId(id);
+  useEffect(() => {
+    const storedQuestionnaires = JSON.parse(localStorage.getItem("questionnaires")) || [];
+    setQuestionnaires(storedQuestionnaires);
+  }, []);
+
+  const handleActionClick = (name, action) => {
     setSelectedName(name);
     setSelectedAction(action);
     setOpen(true);
@@ -27,11 +33,13 @@ export default function PanelSaved() {
 
   const handleConfirmAction = () => {
     if (selectedAction === "delete") {
-      // Lógica para eliminar el cuestionario con el ID selectedId
-      console.log(`Eliminando cuestionario con ID ${selectedId}`);
+      const newValues = questionnaires.filter(e => e.name !== selectedName)
+      localStorage.setItem('questionnaires', JSON.stringify(newValues));
+      setQuestionnaires(newValues)
+      console.log(`Eliminando cuestionario con ID ${selectedName}`);
     } else if (selectedAction === "edit") {
-      // Lógica para editar el cuestionario con el ID selectedId
-      console.log(`Editando cuestionario con ID ${selectedId}`);
+      router.push("/panel/guardados/"+ selectedName)
+      console.log(`Editando cuestionario con ID ${selectedName}`);
     }
 
     // Cerrar el diálogo de confirmación
@@ -39,26 +47,16 @@ export default function PanelSaved() {
   };
 
   const handleClose = () => {
-    setSelectedId(null);
     setSelectedName("");
     setSelectedAction("");
     setOpen(false);
   };
 
-  // Ejemplo de datos de cuestionarios
-  const questionnaires = [
-    { id: 1, name: "Cuestionario 1" },
-    { id: 2, name: "Cuestionario 2" },
-    { id: 3, name: "Cuestionario 3" },
-    { id: 4, name: "Cuestionario 4" },
-    // Agrega más cuestionarios según sea necesario
-  ];
-
   return (
     <Container style={{ marginTop: "100px" }}>
       <Grid container spacing={2}>
         {questionnaires.map((questionnaire) => (
-          <Grid item xs={12} sm={6} md={4} key={questionnaire.id}>
+          <Grid item xs={12} sm={6} md={4} key={questionnaire.name}>
             <Card>
               <CardContent>
                 <Typography variant="h5" component="div">
@@ -67,14 +65,14 @@ export default function PanelSaved() {
                 <Button
                   variant="contained"
                   color="error"
-                  onClick={() => handleActionClick(questionnaire.id, questionnaire.name, "delete")}
+                  onClick={() => handleActionClick(questionnaire.name, "delete")}
                 >
                   Eliminar
                 </Button>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handleActionClick(questionnaire.id, questionnaire.name, "edit")}
+                  onClick={() => handleActionClick(questionnaire.name, "edit")}
                 >
                   Editar
                 </Button>

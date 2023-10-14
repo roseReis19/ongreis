@@ -9,12 +9,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box } from "@mui/material";
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import SendCompany from "../sendCompany";
+import {NotificationManager} from 'react-notifications';
 
 
 export default function TableAdmin() {
   const [data, setData] = useState([]);
+  const [deleteData, setDeleteData] = useState(null)
   const [loading, setLoading] = useState(true);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false); // Nuevo 
 
   useEffect(() => {
     const getData = async () => {
@@ -34,7 +38,39 @@ export default function TableAdmin() {
     };
 
     getData();
-  }, []);
+  }, [data]);
+
+  const openDeleteConfirmation = (id) => {
+    setDeleteConfirmationOpen(true);
+    setDeleteData(id)
+  };
+
+  const closeDeleteConfirmation = () => {
+    setDeleteConfirmationOpen(false);
+    setDeleteData(null)
+  };
+
+  const deleteCompany = async () => {
+    try{
+    const response = await fetch("http://localhost:3000/api/empresa/"+ deleteData, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json', 
+      }
+    });
+
+    if (!response.ok) {
+      NotificationManager.error('error message', 'Dada nao apagado');
+      throw new Error('Network response was not ok'); 
+    }
+
+    const responseData = await response.json(); 
+    NotificationManager.success('Success message', 'Dado apagado');
+    const newData = data.filter(e => e.id !== deleteData)
+  } catch (error) {
+    console.error('POST request error:', error);
+    }
+  }
 
   return (
     <>
@@ -60,13 +96,14 @@ export default function TableAdmin() {
                   <TableCell component="th" scope="row">
                     {row.name}
                   </TableCell>
-                  <TableCell>{row.limite}</TableCell>
-                  <TableCell>{row.usuariosActivos}</TableCell>
+                  <TableCell>{row.limit}</TableCell>
+                  <TableCell>{row.users}</TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"
                       color="error"
                       disabled={row.name === "admin"}
+                      onClick={() => openDeleteConfirmation(row.id)}
                     >
                       Apagar
                     </Button>
@@ -76,6 +113,31 @@ export default function TableAdmin() {
             </TableBody>
           </Table>
         </TableContainer>
+      )}
+      <Divider style={{ margin: "20px 0" }} />
+      <SendCompany setCompany={setData} company={data}/>
+
+      {deleteConfirmationOpen && (
+        <Dialog open={deleteConfirmationOpen} onClose={closeDeleteConfirmation}>
+          <DialogTitle>Confirmar Eliminación</DialogTitle>
+          <DialogContent>
+            <Typography>¿Está seguro de que desea eliminar esta empresa?</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeDeleteConfirmation} color="primary">
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => {
+                deleteCompany();
+                closeDeleteConfirmation();
+              }}
+              color="secondary"
+            >
+              Eliminar
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </>
   );

@@ -13,14 +13,27 @@ import {
 import { useEffect, useState } from "react";
 
 
-export default function ChartResults({ results }) {
+export default function ChartResults({ results, prueba = false }) {
   const [loading, setLoading] = useState(true);
   const [parse, setParse] = useState([]);
 
   useEffect(() => {
+
+    if(results.length !== 0 && prueba){
+      const mapping =[ {
+        id: 1,
+        indicators: results.map((e, i) => ({
+          name: e.indicator,
+          uv: 66,
+          pv: e.encuestado,
+        })),
+      }];
+      setParse(mapping);
+      setLoading(false);
+      return
+    }
   
     if (results.length !== 0) {
-      console.log("results", results)
       const mapping = results.map((e) => ({
         id: e.id,
         indicators: e.indicators.map((indicator, index) => ({
@@ -31,8 +44,10 @@ export default function ChartResults({ results }) {
       }));
       setParse(mapping);
       setLoading(false);
+      return
     }
   }, [results]);
+
 
   return (
     <>

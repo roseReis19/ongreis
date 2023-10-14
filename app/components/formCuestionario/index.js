@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {NotificationManager} from 'react-notifications';
 import {
   Button,
@@ -13,7 +13,9 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function QuestionnaireForm() {
+function QuestionnaireForm({data = false}) {
+
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     domains: [
@@ -37,8 +39,37 @@ function QuestionnaireForm() {
     ],
   });
 
+  useEffect(() => {
+    if(data){
+        const storedQuestionnaires = JSON.parse(localStorage.getItem("questionnaires"));
+        const actual = storedQuestionnaires.filter(e => e.name === data)
+        setFormData(actual[0]);
+    }
+
+    setLoading(true)
+  }, [])
+
+
+
   const handleChange = (e, domainIndex, indicatorIndex, questionIndex, optionIndex) => {
-    // ... (mismo código de manejo de cambios)
+    const { name, value } = e.target;
+    setFormData((prevData) => {
+      const newData = { ...prevData };
+      if (optionIndex !== undefined) {
+        newData.domains[domainIndex].indicators[indicatorIndex].questions[questionIndex].options[
+          optionIndex
+        ][name] = value;
+      } else if (questionIndex !== undefined) {
+        newData.domains[domainIndex].indicators[indicatorIndex].questions[questionIndex][name] = value;
+      } else if (indicatorIndex !== undefined) {
+        newData.domains[domainIndex].indicators[indicatorIndex][name] = value;
+      } else if (domainIndex !== undefined) {
+        newData.domains[domainIndex][name] = value;
+      } else {
+        newData[name] = value;
+      }
+      return newData;
+    });
   };
 
   const handleAddDomain = () => {
@@ -145,8 +176,56 @@ function QuestionnaireForm() {
     });
   };
 
+  const validateFormData = () => {
+    if (!formData.name) {
+      return { isValid: false, errorMessage: 'El nombre del cuestionario no puede estar vacío.' };
+    }
+  
+    const isAnyFieldEmpty = formData.domains.some((domain) => {
+      if (!domain.name) return true;
+  
+      return domain.indicators.some((indicator) => {
+        if (!indicator.name && !indicator.weight && !indicator.grade || !indicator.name && !indicator.criterion) {
+          return true;
+        }
+  
+        return indicator.questions.some((question) => {
+          if (!question.statement) return true;
+  
+          return question.options.some((option) => {
+            return !option.text && option.score === 0;
+          });
+        });
+      });
+    });
+  
+    if (isAnyFieldEmpty) {
+      return { isValid: false, errorMessage: 'Ningún campo puede estar vacío, excepto los opcionales.' };
+    }
+  
+    return { isValid: true, errorMessage: '' };
+  }  
+
   const handleSubmit = () => {
     console.log(formData);
+    try {
+      
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const handleSaveLocalStorage = () => {
+    const {isValid, errorMessage} = validateFormData()
+    if (isValid) {
+      const storedQuestionnaires = JSON.parse(localStorage.getItem('questionnaires')) || [];
+      const updatedQuestionnaires = [...storedQuestionnaires, formData];
+
+      localStorage.setItem('questionnaires', JSON.stringify(updatedQuestionnaires));
+      NotificationManager.success(`Cuestionario "${formData.name}" guardado en el almacenamiento local.`);
+    } else {
+      NotificationManager.error(errorMessage);
+    }
   };
 
   return (
@@ -154,7 +233,7 @@ function QuestionnaireForm() {
       <Typography variant="h4" gutterBottom>
         Crear Cuestionario
       </Typography>
-      <form>
+      {loading &&<form>
         <TextField
           fullWidth
           label="Nombre del Cuestionario"
@@ -350,14 +429,14 @@ function QuestionnaireForm() {
         ))}
 
         <div style={{display: 'flex', justifyContent: 'space-between', marginTop:15, marginBottom: 50}}>
-        <Button variant="contained" color="primary" onClick={handleSubmit} style={{marginTop: 10}}>
+        <Button variant="contained" color="primary" onClick={handleSaveLocalStorage} style={{marginTop: 10}}>
           Guardar 
         </Button>
         <Button variant="contained" color="primary" onClick={handleSubmit} style={{marginTop: 10}}>
           Completar
         </Button>
         </div>
-      </form>
+      </form>}
     </Container>
   );
 }

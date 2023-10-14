@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -11,11 +11,35 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import {NotificationManager} from 'react-notifications';
 
 export default function PanelHome() {
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [selectedName, setSelectedName] = useState("");
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(()=>{
+    const apiRequest = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/cuestionario');
+    
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+    
+        const data = await response.json();
+        setData(data);
+        setLoading(true)
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    }
+
+    apiRequest()
+    
+  }, [])
 
   const handleDeleteClick = (id, name) => {
     setSelectedId(id);
@@ -23,12 +47,30 @@ export default function PanelHome() {
     setOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    // Aquí puedes realizar la lógica para eliminar el cuestionario con el ID selectedId
-    // Por ejemplo, puedes actualizar un array de cuestionarios y eliminar el cuestionario correspondiente
-    console.log(`Eliminando cuestionario con ID ${selectedId}`);
+  const handleConfirmDelete = async() => {
+      try {
+        const response = await fetch('http://localhost:3000/api/cuestionario/' + selectedId,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+        }        
+        );
+    
+        if (!response.ok) {
+          NotificationManager.error('error message', 'Dada nao apagado');
+          throw new Error('Network response was not ok');
+        }
 
-    // Cerrar el diálogo de confirmación
+        const newData = data.filter(item => item.id !== selectedId);
+        setData(newData)
+        NotificationManager.success('Success message', 'Dado apagado');
+        
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+
     setOpen(false);
   };
 
@@ -38,19 +80,11 @@ export default function PanelHome() {
     setOpen(false);
   };
 
-  // Ejemplo de datos de cuestionarios
-  const questionnaires = [
-    { id: 1, name: "Cuestionario 1" },
-    { id: 2, name: "Cuestionario 2" },
-    { id: 3, name: "Cuestionario 3" },
-    { id: 4, name: "Cuestionario 4" },
-    // Agrega más cuestionarios según sea necesario
-  ];
 
   return (
     <Container style={{ marginTop: "100px" }}>
-      <Grid container spacing={2}>
-        {questionnaires.map((questionnaire) => (
+     {loading&& <Grid container spacing={2}>
+        {data.map((questionnaire) => (
           <Grid item xs={12} sm={6} md={4} key={questionnaire.id}>
             <Card>
               <CardContent>
@@ -68,7 +102,7 @@ export default function PanelHome() {
             </Card>
           </Grid>
         ))}
-      </Grid>
+      </Grid>}
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Confirmar eliminación</DialogTitle>

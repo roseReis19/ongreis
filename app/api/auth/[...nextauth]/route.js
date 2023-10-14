@@ -31,7 +31,6 @@ export const authOptions = {
 
         if (!passwordMatch) throw new Error("Invalid credentials");
 
-        console.log("userFound", userFound);
 
         const response = {
           id: userFound.id,
@@ -56,7 +55,6 @@ export const authOptions = {
     },
     async session({ session, token }) {
       session.user = token.user;
-      console.log("session",session)
       return session;
     },
   },

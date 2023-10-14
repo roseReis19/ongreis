@@ -10,10 +10,8 @@ export default async function Layout({ children }) {
     redirect("/platform")
  }
   return (
-    <>
       <MenuPanel>
         {children}
       </MenuPanel>
-    </>
   );
 }

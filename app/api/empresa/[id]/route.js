@@ -1,6 +1,7 @@
+import { NextResponse } from "next/server";
 import prisma from "../../db/prisma";
 
-export async function DELETE(request, params) {
+export async function DELETE(request,{ params}) {
     try {
       const company = await prisma.company.delete({
         where:{

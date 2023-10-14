@@ -108,7 +108,6 @@ export default function MenuPanel({ children }) {
 
 
   return (
-    <>
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
@@ -286,6 +285,5 @@ export default function MenuPanel({ children }) {
       </Drawer>
       {children}
     </Box>
-    </>
   );
 }

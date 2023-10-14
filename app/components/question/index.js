@@ -9,7 +9,7 @@ import { Divider } from "@mui/material";
 import useCuestionario from "@/app/hooks/useQuestionario";
 import { useState } from "react";
 
-export default function QuestionarioForm({ data }) {
+export default function QuestionarioForm({ data, prueba = false }) {
   const cuestionarioData = data;
   const [opcoe, setOpcoe] = useState({});
   const [
@@ -18,7 +18,7 @@ export default function QuestionarioForm({ data }) {
     preguntaActual,
     handleSeleccionarOpcion,
     loading
-  ] = useCuestionario(cuestionarioData);
+  ] = useCuestionario(cuestionarioData, prueba);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function QuestionarioForm({ data }) {
           <Typography gutterBottom variant="h5" component="div">
             {preguntaActual.enunciado}
           </Typography>
-          {preguntaActual.item !== "" && preguntaActual.item !== null && (
+          {preguntaActual.item !== "" && preguntaActual.item !== null && preguntaActual.item !== undefined &&(
             <Typography
               gutterBottom
               variant="h6"
@@ -52,7 +52,7 @@ export default function QuestionarioForm({ data }) {
                 <Button
                   variant={e.texto === opcoe.texto ? "contained" : "outlined"}
                   style={{ width: 240, marginBottom: 10 }}
-                  key={e.id}
+                  key={e.texto}
                   onClick={() =>
                     setOpcoe({
                       id: preguntaActual.id,
@@ -83,7 +83,6 @@ export default function QuestionarioForm({ data }) {
                 retrocederPregunta(opcoe);
                 setOpcoe({});
               }}
-    
             >
               Anterior
             </Button>

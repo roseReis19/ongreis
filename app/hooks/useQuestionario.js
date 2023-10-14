@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import {NotificationManager} from 'react-notifications';
 
-export default function UseCuestionario(cuestionarioData) {
+export default function UseCuestionario(cuestionarioData, prueba = false) {
   const [dominioIndex, setDominioIndex] = useState(0);
   const [indicadorIndex, setIndicadorIndex] = useState(0);
   const [preguntaIndex, setPreguntaIndex] = useState(0);
@@ -19,6 +19,7 @@ export default function UseCuestionario(cuestionarioData) {
 
   useEffect(() => {
     const cuestionarioId = cuestionarioData.id; 
+   
     const storedDominioIndex = localStorage.getItem(
       generateLocalStorageKey(cuestionarioId, "dominioIndex")
     );
@@ -161,7 +162,17 @@ export default function UseCuestionario(cuestionarioData) {
       });
       
       resultados.id = cuestionarioData.id
+      
       try {
+        if(prueba){
+          localStorage.setItem(
+            generateLocalStorageKey(resultados.id, "results"),
+            JSON.stringify(resultados)
+          );
+          router.push("/experimente/results")
+          return
+        }
+
         await sendResults(resultados)
         router.push("/platform")
         NotificationManager.success('Success message', 'Formulario mandado');

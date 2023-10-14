@@ -8,6 +8,7 @@ export async function POST(request) {
     const empresa = await prisma.company.create({
       data: {
         name: data.name,
+        limit: data.limit
       },
     });
 
@@ -21,9 +22,19 @@ export async function POST(request) {
 
 export async function GET(request) {
   try {
-    const company = await prisma.company.findMany({});
+    const companies = await prisma.company.findMany();
+    
+    const companiesWithUserCount = await Promise.all(
+      companies.map(async (company) => {
+        const userCount = await prisma.user.count({
+          where: { companyId: company.id }
+        });
 
-    return NextResponse.json(company);
+        return { ...company, users: userCount };
+      })
+    );
+
+    return NextResponse.json(companiesWithUserCount);
   } catch (error) {
     console.log(error);
   } finally {
