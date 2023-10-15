@@ -6,12 +6,12 @@ export async function POST(request) {
     const data = await request.json();
    const cuestionario = await prisma.questionnaire.create({
       data: {
-        name: data.nome_del_cuestionario,
+        name: data.name,
         domains: {
-          create: data.dominios.map((dominio) => ({
-            name: dominio.nome_del_dominio,
+          create: data.domains.map((dominio) => ({
+            name: dominio.name,
             indicators: {
-              create: dominio.indicadores.map(createIndicador)
+              create: dominio.indicators.map(createIndicator)
             },
           })),
         },
@@ -26,32 +26,32 @@ export async function POST(request) {
   }
 }
 
-function createIndicador(indicador) {
+function createIndicator(indicator) {
   return {
-    name: indicador.nome_del_indicador,
-    criterion: indicador.criterio,
-    weight: indicador.peso,
-    grade: indicador.nota,
+    name: indicator.name,
+    criterion: indicator.criterion,
+    weight: indicator.weight,
+    grade: indicator.grade,
     questions: {
-      create: indicador.perguntas.map(createPergunta),
+      create: indicator.questions.map(createQuestion),
     },
   };
 }
 
-function createPergunta(pergunta) {
+function createQuestion(question) {
   return {
-    statement: pergunta.enunciado_de_la_pregunta,
-    item: pergunta.item,
+    statement: question.statement,
+    item: question.item,
     options: {
-      create: pergunta.opcoes.map(createOpcao), 
+      create: question.options.map(createOption), 
     },
   };
 }
 
-function createOpcao(op) {
+function createOption(op) {
   return {
-    text: op.texto_de_opcoes,
-    score: op.puntaje,
+    text: op.text,
+    score: op.score,
   };
 }
 

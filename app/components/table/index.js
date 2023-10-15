@@ -7,18 +7,19 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
 import SendCompany from "../sendCompany";
 import {NotificationManager} from 'react-notifications';
+import { Button } from '@mui/material';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 
 
 export default function TableAdmin() {
   const [data, setData] = useState([]);
   const [deleteData, setDeleteData] = useState(null)
   const [loading, setLoading] = useState(true);
-  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false); // Nuevo 
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false); 
 
   useEffect(() => {
     const getData = async () => {
@@ -72,6 +73,16 @@ export default function TableAdmin() {
     }
   }
 
+  const handleCopyClick = (textToCopy) => {
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        NotificationManager.success('Success message', 'Senha copiada');
+      })
+      .catch((error) => {
+        console.error('Error al copiar al portapapeles', error);
+      });
+  };
+
   return (
     <>
       {loading ? (
@@ -81,9 +92,10 @@ export default function TableAdmin() {
           <Table sx={{ minWidth: 650}} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
+                <TableCell>Empresa/Usuarios</TableCell>
                 <TableCell>Limite</TableCell>
                 <TableCell>Usuarios</TableCell>
+                <TableCell>Senha</TableCell>
                 <TableCell align="right">Apagar</TableCell>
               </TableRow>
             </TableHead>
@@ -98,6 +110,17 @@ export default function TableAdmin() {
                   </TableCell>
                   <TableCell>{row.limit}</TableCell>
                   <TableCell>{row.users}</TableCell>
+                  <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<ContentPasteIcon />}
+                    onClick={() =>handleCopyClick(row.id)}
+                  >
+                    Copiar
+                  </Button>
+                    
+                  </TableCell>
                   <TableCell align="right">
                     <Button
                       variant="contained"

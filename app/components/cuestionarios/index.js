@@ -52,7 +52,7 @@ export default function PlatformCuestionarios({ data, results }) {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <Box sx={{ height: "100vh" }}>
+        <Box sx={{ minHeight: "100vh" }}>
           <Grid container spacing={2}>
           {data.map((questionario) =>(<Grid item xs={8}>
            <Card

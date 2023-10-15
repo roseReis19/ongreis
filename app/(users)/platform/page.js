@@ -27,7 +27,6 @@ async function getDataResults(id) {
 export default async function Platform() {
   const session = await getServerSession(authOptions)
   const data = await getData()
-  console.log(data)
   const { results } = await getDataResults(session.user.id)
  // console.log(data)
   //console.log(results)

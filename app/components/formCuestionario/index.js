@@ -12,9 +12,10 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useRouter } from 'next/navigation';
 
 function QuestionnaireForm({data = false}) {
-
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -30,6 +31,7 @@ function QuestionnaireForm({data = false}) {
             questions: [
               {
                 statement: '',
+                item: '',
                 options: [{ text: '', score: 0 }],
               },
             ],
@@ -58,7 +60,7 @@ function QuestionnaireForm({data = false}) {
       if (optionIndex !== undefined) {
         newData.domains[domainIndex].indicators[indicatorIndex].questions[questionIndex].options[
           optionIndex
-        ][name] = value;
+        ][name] = Number(value);
       } else if (questionIndex !== undefined) {
         newData.domains[domainIndex].indicators[indicatorIndex].questions[questionIndex][name] = value;
       } else if (indicatorIndex !== undefined) {
@@ -88,6 +90,7 @@ function QuestionnaireForm({data = false}) {
               questions: [
                 {
                   statement: '',
+                  item: '',
                   options: [{ text: '', score: 0 }],
                 },
               ],
@@ -109,6 +112,7 @@ function QuestionnaireForm({data = false}) {
         questions: [
           {
             statement: '',
+            item: '',
             options: [{ text: '', score: 0 }],
           },
         ],
@@ -122,6 +126,7 @@ function QuestionnaireForm({data = false}) {
       const newData = { ...prevData };
       newData.domains[domainIndex].indicators[indicatorIndex].questions.push({
         statement: '',
+        item: '',
         options: [{ text: '', score: 0 }],
       });
       return newData;
@@ -206,12 +211,65 @@ function QuestionnaireForm({data = false}) {
     return { isValid: true, errorMessage: '' };
   }  
 
-  const handleSubmit = () => {
-    console.log(formData);
-    try {
-      
+  const handleSubmit = async () => {
+    const {isValid, errorMessage} = validateFormData()
+    if (isValid) {
+   try {
+      const response = await fetch(
+        "http://localhost:3000/api/cuestionario",
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+          body: JSON.stringify(formData) 
+        }
+      );
+
+      if (!response.ok) {
+        NotificationManager.error('error message', 'Dada nao guardado');
+        throw new Error('Network response was not ok');
+      }
+
+      NotificationManager.success('success message', 'Dada guardado');
+      if(data){
+        const storedQuestionnaires = JSON.parse(localStorage.getItem("questionnaires"));
+        const actual = storedQuestionnaires.filter(e => e.name !== data)
+        localStorage.setItem('questionnaires', JSON.stringify(actual));
+        router.push("/panel")
+      }
+
+      setFormData({
+        name: '',
+        domains: [
+          {
+            name: '',
+            indicators: [
+              {
+                name: '',
+                weight: 0,
+                grade: 0,
+                criterion: '',
+                questions: [
+                  {
+                    statement: '',
+                    item: '',
+                    options: [{ text: '', score: 0 }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+         
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      return;
+    }
+    }else {
+      NotificationManager.error(errorMessage);
     }
   };
 
@@ -308,6 +366,15 @@ function QuestionnaireForm({data = false}) {
                       variant="outlined"
                       name="statement"
                       value={question.statement}
+                      onChange={(e) => handleChange(e, domainIndex, indicatorIndex, questionIndex)}
+                      margin="normal"
+                    />
+                     <TextField
+                      fullWidth
+                      label="Item de la Pregunta"
+                      variant="outlined"
+                      name="item"
+                      value={question.item}
                       onChange={(e) => handleChange(e, domainIndex, indicatorIndex, questionIndex)}
                       margin="normal"
                     />

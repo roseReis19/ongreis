@@ -1,8 +1,9 @@
-import prisma from "@/app/api/db/prisma";
+
 import { NextResponse } from "next/server";
+import prisma from "../../db/prisma";
 
 
-export async function GET(request) {
+export async function POST(request) {
   try {
     const data = await request.json();
     const results = await prisma.result.findMany({
