@@ -13,7 +13,7 @@ export async function GET(request) {
         }
       },
       orderBy: {
-        edad: 'asc', 
+        gender: 'asc', 
       },
     });
 
