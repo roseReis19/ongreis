@@ -23,7 +23,7 @@ export async function GET(request) {
 
     const usersResults = usersFound.results;
 
-    return NextResponse.json({ results: userResults });
+    return NextResponse.json({ results: usersResults });
   } catch (error) {
     console.log(error)
     return NextResponse.error();
