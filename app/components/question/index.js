@@ -27,7 +27,7 @@ export default function QuestionarioForm({ data, prueba = false }) {
       <Card sx={{ maxWidth: 800 }}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            {preguntaActual.enunciado}
+            {preguntaActual.statement}
           </Typography>
           {preguntaActual.item !== "" && preguntaActual.item !== null && preguntaActual.item !== undefined &&(
             <Typography
@@ -47,21 +47,21 @@ export default function QuestionarioForm({ data, prueba = false }) {
               marginTop: 25,
             }}
           >
-            {preguntaActual.opcoes.map((e) => {
+            {preguntaActual.options.map((e) => {
               return (
                 <Button
-                  variant={e.texto === opcoe.texto ? "contained" : "outlined"}
+                  variant={e.text === opcoe.text ? "contained" : "outlined"}
                   style={{ width: 240, marginBottom: 10 }}
-                  key={e.texto}
+                  key={e.text}
                   onClick={() =>
                     setOpcoe({
                       id: preguntaActual.id,
-                      pontuacao: e.pontuacao,
-                      texto: e.texto,
+                      score: e.score,
+                      text: e.text,
                     })
                   }
                 >
-                  {e.texto}
+                  {e.text}
                 </Button>
               );
             })}
@@ -79,16 +79,12 @@ export default function QuestionarioForm({ data, prueba = false }) {
               color="success"
               variant="contained"
               onClick={() => {
-                console.log("here")
                 retrocederPregunta(opcoe);
                 setOpcoe({});
               }}
             >
               Anterior
             </Button>
-            {/*<Button color="success" variant="contained">
-                Guardar
-            </Button>*/}
             <Button
               color="success"
               variant="contained"

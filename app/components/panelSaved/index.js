@@ -42,7 +42,6 @@ export default function PanelSaved() {
       console.log(`Editando cuestionario con ID ${selectedName}`);
     }
 
-    // Cerrar el diálogo de confirmación
     setOpen(false);
   };
 
@@ -86,7 +85,7 @@ export default function PanelSaved() {
         <DialogTitle>Confirmar acción</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas {selectedAction === "delete" ? "eliminar" : "editar"} el cuestionario "{selectedName}"?
+            ¿Você tem certeza que quer {selectedAction === "delete" ? "Apagar" : "Editar"} o cuestionario "{selectedName}"?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -94,7 +93,7 @@ export default function PanelSaved() {
             Cancelar
           </Button>
           <Button onClick={handleConfirmAction} color={selectedAction === "delete" ? "error" : "primary"}>
-            {selectedAction === "delete" ? "Eliminar" : "Editar"}
+            {selectedAction === "delete" ? "Apagar" : "Editar"}
           </Button>
         </DialogActions>
       </Dialog>

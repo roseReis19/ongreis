@@ -3,7 +3,7 @@ import QuestionnaireForm from "@/app/components/formCuestionario";
 
 export default function AddCuestionario() {
   return (
-    <Container style={{ marginTop: '100px', cursor: 'pointer' }} >
+    <Container style={{ marginTop: '100px'}} >
         <QuestionnaireForm />
     </Container>
   );

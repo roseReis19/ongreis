@@ -23,7 +23,7 @@ export default function PanelHome() {
   useEffect(()=>{
     const apiRequest = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/cuestionario');
+        const response = await fetch(`/api/cuestionario`);
     
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -49,7 +49,7 @@ export default function PanelHome() {
 
   const handleConfirmDelete = async() => {
       try {
-        const response = await fetch('http://localhost:3000/api/cuestionario/' + selectedId,
+        const response = await fetch(`/api/cuestionario/${selectedId}`,
         {
           method: 'DELETE',
           headers: {
@@ -59,13 +59,13 @@ export default function PanelHome() {
         );
     
         if (!response.ok) {
-          NotificationManager.error('error message', 'Dada nao apagado');
+          NotificationManager.error('error message', 'Dados não excluídos');
           throw new Error('Network response was not ok');
         }
 
         const newData = data.filter(item => item.id !== selectedId);
         setData(newData)
-        NotificationManager.success('Success message', 'Dado apagado');
+        NotificationManager.success('Success message', 'Dados excluídos');
         
       } catch (error) {
         console.error('Fetch error:', error);
@@ -96,7 +96,7 @@ export default function PanelHome() {
                   color="error"
                   onClick={() => handleDeleteClick(questionnaire.id, questionnaire.name)}
                 >
-                  Eliminar
+                  Apagar
                 </Button>
               </CardContent>
             </Card>
@@ -108,7 +108,7 @@ export default function PanelHome() {
         <DialogTitle>Confirmar eliminación</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Estás seguro de que deseas eliminar el cuestionario "{selectedName}"?
+            ¿Tem certeza de que deseja excluir o questionário "{selectedName}"?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -116,7 +116,7 @@ export default function PanelHome() {
             Cancelar
           </Button>
           <Button onClick={handleConfirmDelete} color="error">
-            Eliminar
+            Apagar
           </Button>
         </DialogActions>
       </Dialog>

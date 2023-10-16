@@ -24,7 +24,7 @@ export default function TableAdmin() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/empresa", {
+        const response = await fetch(`/api/empresa`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default function TableAdmin() {
     };
 
     getData();
-  }, [data]);
+  }, []);
 
   const openDeleteConfirmation = (id) => {
     setDeleteConfirmationOpen(true);
@@ -53,7 +53,7 @@ export default function TableAdmin() {
 
   const deleteCompany = async () => {
     try{
-    const response = await fetch("http://localhost:3000/api/empresa/"+ deleteData, {
+    const response = await fetch(`/api/empresa/${deleteData}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json', 
@@ -61,13 +61,14 @@ export default function TableAdmin() {
     });
 
     if (!response.ok) {
-      NotificationManager.error('error message', 'Dada nao apagado');
+      NotificationManager.error('error message', 'Dados não excluídos');
       throw new Error('Network response was not ok'); 
     }
 
     const responseData = await response.json(); 
-    NotificationManager.success('Success message', 'Dado apagado');
+    NotificationManager.success('Success message', 'Dados excluídos');
     const newData = data.filter(e => e.id !== deleteData)
+    setData(newData)
   } catch (error) {
     console.error('POST request error:', error);
     }
@@ -79,14 +80,14 @@ export default function TableAdmin() {
         NotificationManager.success('Success message', 'Senha copiada');
       })
       .catch((error) => {
-        console.error('Error al copiar al portapapeles', error);
+        console.error('Error ao copiar no portapapel', error);
       });
   };
 
   return (
     <>
       {loading ? (
-        <Typography>No hay datos</Typography>
+        <Typography>Não tem datos</Typography>
       ) : (
         <TableContainer component={Paper} style={{width: '100%', maxHeight: 200}}>
           <Table sx={{ minWidth: 650}} aria-label="simple table">
@@ -142,9 +143,9 @@ export default function TableAdmin() {
 
       {deleteConfirmationOpen && (
         <Dialog open={deleteConfirmationOpen} onClose={closeDeleteConfirmation}>
-          <DialogTitle>Confirmar Eliminación</DialogTitle>
+          <DialogTitle>Confirmar exclusão</DialogTitle>
           <DialogContent>
-            <Typography>¿Está seguro de que desea eliminar esta empresa?</Typography>
+            <Typography>Tem certeza de que deseja excluir esta empresa?</Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={closeDeleteConfirmation} color="primary">
@@ -157,7 +158,7 @@ export default function TableAdmin() {
               }}
               color="secondary"
             >
-              Eliminar
+              Apagar
             </Button>
           </DialogActions>
         </Dialog>

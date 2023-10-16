@@ -75,20 +75,20 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
   const avanzarPregunta = async () => {
     if (
       preguntaIndex <
-      cuestionarioData.dominios[dominioIndex].indicadores[indicadorIndex]
-        .perguntas.length -
+      cuestionarioData.domains[dominioIndex].indicators[indicadorIndex]
+        .questions.length -
         1
     ) {
       setPreguntaIndex(preguntaIndex + 1);
     } else {
       if (
         indicadorIndex <
-        cuestionarioData.dominios[dominioIndex].indicadores.length - 1
+        cuestionarioData.domains[dominioIndex].indicators.length - 1
       ) {
         setIndicadorIndex(indicadorIndex + 1);
         setPreguntaIndex(0);
       } else {
-        if (dominioIndex < cuestionarioData.dominios.length - 1) {
+        if (dominioIndex < cuestionarioData.domains.length - 1) {
           setDominioIndex(dominioIndex + 1);
           setIndicadorIndex(0);
           setPreguntaIndex(0);
@@ -110,21 +110,21 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
     } else if (indicadorIndex > 0) {
       setIndicadorIndex(indicadorIndex - 1);
       setPreguntaIndex(
-        cuestionarioData.dominios[dominioIndex].indicadores[indicadorIndex - 1]
-          .perguntas.length - 1
+        cuestionarioData.domains[dominioIndex].indicators[indicadorIndex - 1]
+          .questions.length - 1
       );
     } else if (dominioIndex > 0) {
       setDominioIndex(dominioIndex - 1);
-      const anteriorDominio = cuestionarioData.dominios[dominioIndex - 1];
-      setIndicadorIndex(anteriorDominio.indicadores.length - 1);
+      const anteriorDominio = cuestionarioData.domains[dominioIndex - 1];
+      setIndicadorIndex(anteriorDominio.indicators.length - 1);
       setPreguntaIndex(
-        anteriorDominio.indicadores[anteriorDominio.indicadores.length - 1]
+        anteriorDominio.indicators[anteriorDominio.indicators.length - 1]
           .preguntas.length - 1
       );
     }
     const indicador =
-      cuestionarioData.dominios[dominioIndex].indicadores[indicadorIndex];
-    eliminarPuntuacion(indicador, data.id);
+      cuestionarioData.domains[dominioIndex].indicators[indicadorIndex];
+    eliminarPuntuacion(indicador);
   };
 
   const  calcularPuntuacionTotal = async () => {
@@ -174,8 +174,6 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
         }
 
         await sendResults(resultados)
-        router.push("/platform")
-        NotificationManager.success('Success message', 'Formulario mandado');
       } catch (error) {
         console.log(error)
       }
@@ -184,18 +182,18 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
 
   const handleSeleccionarOpcion = (data) => {
     const indicador =
-      cuestionarioData.dominios[dominioIndex].indicadores[indicadorIndex];
+      cuestionarioData.domains[dominioIndex].indicators[indicadorIndex];
     const elementoExistente = puntuacion.find(
-      (elemento) => elemento.indicador === indicador.nome
+      (elemento) => elemento.indicador === indicador.name
     );
 
     if (elementoExistente) {
       const nuevaPuntuacion = elementoExistente.puntuacion.concat({
-        [data.id]: data.pontuacao,
+        [data.id]: data.score,
       });
 
       const nuevosElementos = puntuacion.map((elemento) => {
-        if (elemento.indicador === indicador.nome) {
+        if (elemento.indicador === indicador.name) {
           return { ...elemento, puntuacion: nuevaPuntuacion };
         }
         return elemento;
@@ -203,13 +201,13 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
 
       setPuntuacion(nuevosElementos);
     } else {
-      if (indicador.criterio !== null && indicador.criterio === "brasil") {
+      if (indicador.criterion !== null && indicador.criterion === "brasil") {
         const nuevoElemento = {
-          indicador: indicador.nome,
-          criterio: indicador.criterio,
+          indicador: indicador.name,
+          criterio: indicador.criterion,
           puntuacion: [
             {
-              [data.id]: data.pontuacao,
+              [data.id]: data.score,
             },
           ],
         };
@@ -217,12 +215,12 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
         setPuntuacion([...puntuacion, nuevoElemento]);
       } else {
         const nuevoElemento = {
-          indicador: indicador.nome,
-          peso: indicador.peso,
-          nota: indicador.nota,
+          indicador: indicador.name,
+          peso: indicador.weight,
+          nota: indicador.grade,
           puntuacion: [
             {
-              [data.id]: data.pontuacao,
+              [data.id]: data.score,
             },
           ],
         };
@@ -235,10 +233,10 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
   const eliminarPuntuacion = (indicadorNome) => {
     const nuevosElementos = [...puntuacion];
     const elementoIndicadorIndex = nuevosElementos.findIndex(
-      (elemento) => elemento.indicador === indicadorNome.nome
+      (elemento) => elemento.indicador === indicadorNome.name
     );
     if (elementoIndicadorIndex !== -1) {
-      console.log("aqui")
+
       const elementoIndicador = nuevosElementos[elementoIndicadorIndex];
 
       elementoIndicador.puntuacion.pop();
@@ -250,7 +248,7 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
 
   const sendResults = async (results) => {
     const send = {
-      "cuestionarioId":1,
+      "cuestionarioId":cuestionarioData.id,
       "userId": data.user.id,
       "indicadores": results.map(e => (
         {"indicador": e.indicador, "porcentaje": e.encuestado}
@@ -258,7 +256,7 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
     }
 
     try {
-      await fetch("http://localhost:3000/api/cuestionario/results", {
+      await fetch("/api/cuestionario/results", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', 
@@ -266,14 +264,17 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
         body: JSON.stringify(send), 
       });
 
+      NotificationManager.success('Success message', 'Formulario mandado');
+      router.push("/platform")
     } catch (error) {
       console.log(error)
+      NotificationManager.error('Error message', 'Error');
     }
   }
 
   const preguntaActual =
-    cuestionarioData.dominios[dominioIndex].indicadores[indicadorIndex]
-      .perguntas[preguntaIndex];
+    cuestionarioData.domains[dominioIndex].indicators[indicadorIndex]
+      .questions[preguntaIndex];
 
   return [
     retrocederPregunta,

@@ -6,7 +6,7 @@ import PanelSaved from "@/app/components/panelSaved";
 export default function Saved() {
   return (
     <Container style={{ marginTop: '100px', cursor: 'pointer' }} >
-        <Typography>Cuestionarios Guardados</Typography>
+        <Typography>Questionários Guardados</Typography>
         <PanelSaved />
     </Container>
   );

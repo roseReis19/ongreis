@@ -21,7 +21,7 @@ export default function Dados() {
   async function getData(){
     try {
       const response = await fetch(
-        "http://localhost:3000/api/dados",
+        `/api/dados`,
         {
           method: 'GET',
           headers: {
@@ -31,7 +31,7 @@ export default function Dados() {
       );
 
       if (!response.ok) {
-        NotificationManager.error('error message', 'Dado nao obtenido');
+        NotificationManager.error('error message', 'Dados não obtidos');
         throw new Error('Network response was not ok');
       }
       const dados = await response.json()
@@ -39,17 +39,17 @@ export default function Dados() {
       const exportType =  exportFromJSON.types.csv
       const send = dados.results
       exportFromJSON({ send, fileName, exportType })
-      NotificationManager.success('success message', 'Dados obtenidos');
+      NotificationManager.success('success message', 'Dados obtidos');
     } catch (error) {
       console.log(error)
-      NotificationManager.error('error message', 'Dado nao obtenido');
+      NotificationManager.error('error message', 'Dados não obtidos');
     }
   }
 
   async function getDataCompany(){
     try {
       const response = await fetch(
-        "http://localhost:3000/api/dados/company",
+        `/api/dados/company`,
         {
           method: 'POST',
           headers: {
@@ -62,7 +62,7 @@ export default function Dados() {
       );
 
       if (!response.ok) {
-        NotificationManager.error('error message', 'Dado nao obtenido');
+        NotificationManager.error('error message', 'Dados não obtidos');
         throw new Error('Network response was not ok');
       }
       const dados = await response.json()
@@ -70,10 +70,10 @@ export default function Dados() {
       const exportType =  exportFromJSON.types.csv
       const send = dados.results
       exportFromJSON({ send, fileName, exportType })
-      NotificationManager.success('success message', 'Dados obtenidos');
+      NotificationManager.success('success message', 'Dados obtidos');
     } catch (error) {
       console.log(error)
-      NotificationManager.error('error message', 'Dado nao obtenido');
+      NotificationManager.error('error message', 'Dados não obtidos');
     }
   }
 
@@ -100,7 +100,7 @@ export default function Dados() {
         fullWidth
         onClick={getDataCompany}
       >
-        Dados de empresa
+        Dados da empresa
       </Button>
     </Container>
   );

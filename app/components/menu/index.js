@@ -18,7 +18,7 @@ import Button from '@mui/material/Button';
 import { useRouter } from 'next/navigation';
 
 const drawerWidth = 240;
-const navItems = [{name:'Login', id: 1, route: '/login'}, {name:'Register', id:2, route: '/register'}];
+const navItems = [{name:'Conecte-se', id: 1, route: '/login'}, {name:'Cadaste-se', id:2, route: '/register'}];
 
 function ResponsiveMenu(props) {
     const { window } = props;
@@ -85,7 +85,7 @@ function ResponsiveMenu(props) {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true, 
         }}
         sx={{
           display: { xs: 'block', sm: 'none' },

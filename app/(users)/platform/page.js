@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]/route"
 
 async function getData() {
-  const res = await fetch('http://localhost:3000/api/cuestionario', { next: { cache: 'no-store' } })
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/cuestionario`, { next: { cache: 'no-store' } })
  
   if (!res.ok) {
     throw new Error('Failed to fetch data')
@@ -13,7 +13,7 @@ async function getData() {
 }
 
 async function getDataResults(id) {
-  const res = await fetch(`http://localhost:3000/api/results/${id}`,  { next: { cache: 'no-store' } })
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/results/${id}`,  { next: { cache: 'no-store' } })
  
   if (!res.ok) {
     throw new Error('Failed to fetch data')
@@ -28,6 +28,7 @@ export default async function Platform() {
   const session = await getServerSession(authOptions)
   const data = await getData()
   const { results } = await getDataResults(session.user.id)
+  console.log(results)
  // console.log(data)
   //console.log(results)
 

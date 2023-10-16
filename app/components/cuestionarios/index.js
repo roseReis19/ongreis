@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ChartResults from "@/app/components/chart";
 
 function CustomTabPanel(props) {
@@ -54,13 +54,13 @@ export default function PlatformCuestionarios({ data, results }) {
       <CustomTabPanel value={value} index={0}>
         <Box sx={{ minHeight: "100vh" }}>
           <Grid container spacing={2}>
-          {data.map((questionario) =>(<Grid item xs={8}>
+          {data.map((questionario) =>(<Grid item xs={6}   key={questionario.id}>
            <Card
                 sx={{
                   minWidth: 275,
                   backgroundColor: "whitesmoke",
                   color: "black",
-                }}
+                }}  
               >
                <CardContent>
                   <Typography sx={{ fontSize: 14 }} gutterBottom>

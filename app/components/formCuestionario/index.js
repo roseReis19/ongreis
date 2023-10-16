@@ -6,9 +6,9 @@ import {
   Button,
   Container,
   TextField,
-  Grid,
   Typography,
   IconButton,
+  Grid,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -60,7 +60,7 @@ function QuestionnaireForm({data = false}) {
       if (optionIndex !== undefined) {
         newData.domains[domainIndex].indicators[indicatorIndex].questions[questionIndex].options[
           optionIndex
-        ][name] = Number(value);
+        ][name] = name === 'score'?Number(value): value;
       } else if (questionIndex !== undefined) {
         newData.domains[domainIndex].indicators[indicatorIndex].questions[questionIndex][name] = value;
       } else if (indicatorIndex !== undefined) {
@@ -205,7 +205,7 @@ function QuestionnaireForm({data = false}) {
     });
   
     if (isAnyFieldEmpty) {
-      return { isValid: false, errorMessage: 'Ningún campo puede estar vacío, excepto los opcionales.' };
+      return { isValid: false, errorMessage: 'Nenhum campo pode estar vazio, exceto os opcionais.' };
     }
   
     return { isValid: true, errorMessage: '' };
@@ -216,7 +216,7 @@ function QuestionnaireForm({data = false}) {
     if (isValid) {
    try {
       const response = await fetch(
-        "http://localhost:3000/api/cuestionario",
+        `/api/cuestionario`,
         {
           method: 'POST',
           headers: {
@@ -307,7 +307,7 @@ function QuestionnaireForm({data = false}) {
             <Typography variant="h6">Domain {domainIndex + 1}</Typography>
             <TextField
               fullWidth
-              label="Nombre del Dominio"
+              label="Nome do Dominio"
               variant="outlined"
               name="name"
               value={domain.name}
@@ -320,7 +320,7 @@ function QuestionnaireForm({data = false}) {
                 <Typography variant="subtitle1">Indicator {indicatorIndex + 1}</Typography>
                 <TextField
                   fullWidth
-                  label="Nombre del Indicador"
+                  label="Nome do Indicador"
                   variant="outlined"
                   name="name"
                   value={indicator.name}
@@ -362,7 +362,7 @@ function QuestionnaireForm({data = false}) {
                     <Typography variant="subtitle2">Question {questionIndex + 1}</Typography>
                     <TextField
                       fullWidth
-                      label="Enunciado de la Pregunta"
+                      label="Enunciado da Pergunta"
                       variant="outlined"
                       name="statement"
                       value={question.statement}
@@ -371,7 +371,7 @@ function QuestionnaireForm({data = false}) {
                     />
                      <TextField
                       fullWidth
-                      label="Item de la Pregunta"
+                      label="Item da Pergunta"
                       variant="outlined"
                       name="item"
                       value={question.item}
@@ -384,7 +384,7 @@ function QuestionnaireForm({data = false}) {
                         <Grid item xs={6}>
                           <TextField
                             fullWidth
-                            label="Texto de la Opción"
+                            label="Texto da Opción"
                             variant="outlined"
                             name="text"
                             value={option.text}
@@ -396,7 +396,7 @@ function QuestionnaireForm({data = false}) {
                         <Grid item xs={4}>
                           <TextField
                             fullWidth
-                            label="Puntuación de la Opción"
+                            label="Puntuación da Opción"
                             variant="outlined"
                             name="score"
                             type="number"
@@ -441,7 +441,7 @@ function QuestionnaireForm({data = false}) {
                         style={{marginTop: 10}}
                         onClick={() => handleAddQuestion(domainIndex, indicatorIndex)}
                       >
-                        Agregar Pregunta
+                        Adicionar Pergunta
                       </Button>
                     )}
                     {questionIndex === indicator.questions.length - 1 && questionIndex !== 0 && (
@@ -463,7 +463,7 @@ function QuestionnaireForm({data = false}) {
                     onClick={() => handleAddIndicator(domainIndex)}
                     style={{marginTop: 10}}
                   >
-                    Agregar Indicador
+                    Adicionar Indicador
                   </Button>
                 )}
               
@@ -484,7 +484,7 @@ function QuestionnaireForm({data = false}) {
                 color="primary"
                 onClick={() => handleAddDomain()}
               >
-                Agregar Dominio
+                Adicionar Dominio
               </Button>
             )}
             {domainIndex === formData.domains.length - 1 && domainIndex !== 0 && (
@@ -497,7 +497,7 @@ function QuestionnaireForm({data = false}) {
 
         <div style={{display: 'flex', justifyContent: 'space-between', marginTop:15, marginBottom: 50}}>
         <Button variant="contained" color="primary" onClick={handleSaveLocalStorage} style={{marginTop: 10}}>
-          Guardar 
+          Salvar
         </Button>
         <Button variant="contained" color="primary" onClick={handleSubmit} style={{marginTop: 10}}>
           Completar

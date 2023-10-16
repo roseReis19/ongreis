@@ -69,6 +69,7 @@ export default function PlatformLayout({ children, params }) {
   };
 
   return (
+      <div>
       <Box sx={{ display: 'flex', }}>
       <CssBaseline />
       <AppBar position="fixed" open={open} sx={{ backgroundColor: 'rgb(17, 72, 182)' }}>
@@ -129,5 +130,6 @@ export default function PlatformLayout({ children, params }) {
       </Drawer>
       {children}
     </Box>
+    </div>
   )
 }

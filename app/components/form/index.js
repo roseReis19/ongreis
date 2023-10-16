@@ -87,7 +87,7 @@ export default function Form({ admin = false, login = false }) {
 
     if (res.error) {
       console.log(res.error)
-      setFormErrors({ errorAPI: "Ha ocurrido un error" });
+      setFormErrors({ errorAPI: "Ocorreu um erro" });
       return
     }
 
@@ -106,22 +106,22 @@ export default function Form({ admin = false, login = false }) {
     const errors = {};
 
     if (!formData.email) {
-      errors.email = "El correo electrónico es obligatorio";
+      errors.email = "O e-mail é obrigatório";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "El correo electrónico no es válido";
+      errors.email = "O e-mail não é válido";
     }
 
     if (!formData.password || formData.password.length < 6) {
       console.log(formData.password);
-      errors.password = "La contraseña debe tener al menos 6 caracteres";
+      errors.password = "A senha deve ter pelo menos 6 caracteres";
     }
 
     if (!login && !formData.name) {
-      errors.name = "El nombre es obligatorio";
+      errors.name = "O nome é obrigatório";
     }
 
     if (!login && !formData.senha) {
-      errors.senha = "La contraseña es obligatoria";
+      errors.senha = "A senha é obrigatória";
     }
 
     if (!login && formData.genero === '') {
@@ -145,13 +145,13 @@ export default function Form({ admin = false, login = false }) {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/signup",
+        `/api/auth/signup`,
         requestOptions
       );
 
       return await response.json();
     } catch (error) {
-      error.errorAPI = "Ha ocurrido un error";
+      error.errorAPI = "Ocorreu um erro";
       setFormErrors(errors);
       console.log(error);
       return;
@@ -183,7 +183,7 @@ export default function Form({ admin = false, login = false }) {
           <TextField
             required
             id="filled-basic"
-            label="Nome completo"
+            label="Nome"
             variant="filled"
             name="name"
             value={formData.name}
@@ -231,7 +231,7 @@ export default function Form({ admin = false, login = false }) {
           onChange={handleInputChange}
           style={{marginTop: 10}}
         >
-          <MenuItem value="">Seleccione genero</MenuItem>
+          <MenuItem value="">Selecione o gênero</MenuItem>
           <MenuItem value="masculino">masculino</MenuItem>
           <MenuItem value="femenino">femenino</MenuItem>
         </Select>
@@ -274,7 +274,7 @@ export default function Form({ admin = false, login = false }) {
           variant="contained"
           onClick={handleSubmit}
         >
-          {login ? "login" : "register"}
+          {login ? "Conecte-se" : "Cadastre-se"}
         </Button>
         <div
           style={{
@@ -284,11 +284,11 @@ export default function Form({ admin = false, login = false }) {
           }}
         >
           {!login ? (
-            <Link href={admin?"/admin/login":"/login"}>Login</Link>
+            <Link href={admin?"/admin/login":"/login"}>Conecte-se</Link>
           ) : (
-            <Link href={ admin?"/admin" :"/register"}>Cadastro</Link>
+            <Link href={ admin?"/admin" :"/register"}>Cadastre-se</Link>
           )}
-          <Link href="/">Inicio</Link>
+          <Link href="/">Começar</Link>
         </div>
       </form>
     </section>
