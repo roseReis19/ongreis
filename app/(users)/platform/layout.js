@@ -49,11 +49,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 
-export const metadata = {
-  title: 'Platforma do Instituto Rose Reis',
-  description: '',
-}
-
 export default function PlatformLayout({ children, params }) {
   const router = useRouter();
   const theme = useTheme();
