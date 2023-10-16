@@ -108,7 +108,7 @@ export default function PanelHome() {
         <DialogTitle>Confirmar eliminación</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Tem certeza de que deseja excluir o questionário "{selectedName}"?
+            ¿Tem certeza de que deseja excluir o questionário {selectedName}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

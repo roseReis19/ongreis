@@ -85,7 +85,7 @@ export default function PanelSaved() {
         <DialogTitle>Confirmar acción</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ¿Você tem certeza que quer {selectedAction === "delete" ? "Apagar" : "Editar"} o cuestionario "{selectedName}"?
+            ¿Você tem certeza que quer {selectedAction === "delete" ? "Apagar" : "Editar"} o cuestionario {selectedName}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
