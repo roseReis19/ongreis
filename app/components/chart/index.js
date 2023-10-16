@@ -46,7 +46,7 @@ export default function ChartResults({ results, prueba = false }) {
       setLoading(false);
       return
     }
-  }, [results]);
+  }, [results, prueba]);
 
 
   return (
