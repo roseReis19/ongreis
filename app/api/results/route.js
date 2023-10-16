@@ -21,7 +21,7 @@ export async function GET(request) {
       return NextResponse.error({ statusCode: 404, message: "Users not found" });
     }
 
-    const usersResults = userFound.results;
+    const usersResults = usersFound.results;
 
     return NextResponse.json({ results: userResults });
   } catch (error) {
