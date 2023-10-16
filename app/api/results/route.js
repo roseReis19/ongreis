@@ -4,7 +4,7 @@ import prisma from "../db/prisma";
 
 export async function GET(request) {
   try {
-   const usersFound = await prisma.user.find({
+   const usersFound = await prisma.user.findMany({
       include: {
         results: {
           include: {
