@@ -98,7 +98,7 @@ export default function Form({ admin = false, login = false }) {
 
     if (res.ok){
       NotificationManager.success('Success message', 'Ingresando');
-      return router.push(`/platform`);
+      router.push(`/platform`);
     } 
   };
 
@@ -112,7 +112,6 @@ export default function Form({ admin = false, login = false }) {
     }
 
     if (!formData.password || formData.password.length < 6) {
-      console.log(formData.password);
       errors.password = "A senha deve ter pelo menos 6 caracteres";
     }
 

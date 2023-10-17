@@ -1,6 +1,6 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import PlatformCuestionarios from "@/app/components/cuestionarios";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../api/auth/[...nextauth]/route"
 
 async function getData() {
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/cuestionario`, { next: { cache: 'no-store' } })
@@ -27,12 +27,10 @@ async function getDataResults(id) {
 export default async function Platform() {
   const session = await getServerSession(authOptions)
   const data = await getData()
+  //console.log(session)
   const { results } = await getDataResults(session.user.id)
-  console.log(results)
- // console.log(data)
-  //console.log(results)
 
   return (
-    <PlatformCuestionarios data={data} results={results}/>
+   <PlatformCuestionarios data={data} results={results}/>
   );
 }
