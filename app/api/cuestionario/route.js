@@ -27,7 +27,6 @@ export async function POST(request) {
 }
 
 function createIndicator(indicator) {
-  console.log(indicator.weight === 0)
   return {
     name: indicator.name,
     criterion: indicator.criterion.toLowerCase(),
