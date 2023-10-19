@@ -265,8 +265,7 @@ export default function MenuPanel({ children }) {
                 px: 2.5,
               }}
               onClick={() => {
-                console.log("here")
-                signOut("/login");
+                signOut();
               }}
             >
               <ListItemIcon

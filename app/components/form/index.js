@@ -242,7 +242,7 @@ export default function Form({ admin = false, login = false }) {
             <TextField
               sx={{ marginTop: formErrors.senha ? 2 : 3 }}
               id="filled-password-input"
-              label="senha"
+              label="Codigo"
               type="password"
               autoComplete="current-password"
               variant="filled"
@@ -260,7 +260,7 @@ export default function Form({ admin = false, login = false }) {
         <TextField
           sx={{ marginTop: formErrors.password ? 2 : 3 }}
           id="filled-password-input"
-          label="Password"
+          label="Senha"
           type="password"
           autoComplete="current-password"
           variant="filled"
