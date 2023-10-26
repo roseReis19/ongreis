@@ -265,7 +265,11 @@ export default function MenuPanel({ children }) {
                 px: 2.5,
               }}
               onClick={() => {
-                signOut();
+                signOut(
+                  { redirect: false }).then(() => {
+                    router.push("/");
+                  }
+                );
               }}
             >
               <ListItemIcon
