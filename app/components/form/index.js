@@ -87,7 +87,7 @@ export default function Form({ admin = false, login = false }) {
 
     if (res.error) {
       console.log(res.error)
-      setFormErrors({ errorAPI: "Ocorreu um erro" });
+      setFormErrors({ errorAPI: "As credenciais estão erradas" });
       return
     }
 
