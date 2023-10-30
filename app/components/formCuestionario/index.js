@@ -43,8 +43,10 @@ function QuestionnaireForm({data = false}) {
 
   useEffect(() => {
     if(data){
+      console.log(data)
         const storedQuestionnaires = JSON.parse(localStorage.getItem("questionnaires"));
         const actual = storedQuestionnaires.filter(e => e.name === data)
+        console.log(actual)
         setFormData(actual[0]);
     }
 
@@ -276,10 +278,23 @@ function QuestionnaireForm({data = false}) {
   const handleSaveLocalStorage = () => {
     const {isValid, errorMessage} = validateFormData()
     if (isValid) {
-      const storedQuestionnaires = JSON.parse(localStorage.getItem('questionnaires')) || [];
-      const updatedQuestionnaires = [...storedQuestionnaires, formData];
+      let storedQuestionnaires = JSON.parse(localStorage.getItem('questionnaires')) || [];
 
-      localStorage.setItem('questionnaires', JSON.stringify(updatedQuestionnaires));
+      let exist = storedQuestionnaires.some(objeto => objeto.name === formData.name);
+      if(exist){
+        storedQuestionnaires = storedQuestionnaires.map(obj => {
+          if (obj.name === formData.name) {
+              return formData;
+          }
+          return obj;
+        });
+
+      }else{
+        storedQuestionnaires.push(formData)
+      }
+      //const updatedQuestionnaires = [...storedQuestionnaires, formData];
+
+      localStorage.setItem('questionnaires', JSON.stringify(storedQuestionnaires));
       NotificationManager.success(`Cuestionario "${formData.name}" guardado en el almacenamiento local.`);
     } else {
       NotificationManager.error(errorMessage);

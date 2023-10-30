@@ -30,7 +30,7 @@ function createIndicator(indicator) {
   return {
     name: indicator.name,
     criterion: indicator.criterion.toLowerCase(),
-    weight: indicator.weight === '0' ? null: parseFloat(indicator.weight),
+    weight: indicator.weight === '0' ? null: indicator.weight,
     grade: Number(indicator.grade),
     questions: {
       create: indicator.questions.map(createQuestion),
