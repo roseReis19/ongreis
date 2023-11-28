@@ -15,9 +15,8 @@ async function getData(param) {
 
 
 export default async function Questionario({ params }) {
-  //console.log(params);
   const data = await getData(params.questionario)
- // const data = mock;
+
   return (
     <Container style={{ marginTop: "80px" }}>
      <QuestionarioForm data = {data}/>

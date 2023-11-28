@@ -11,7 +11,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ChartResults from "@/app/components/chart";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -92,15 +91,6 @@ export default function PlatformCuestionarios({ data, results }) {
             </Grid>))}
           </Grid>
         </Box>
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        {results.lenght === 0 ? (
-          <Typography>
-            Preencha os questionários para ver os resultados
-          </Typography>
-        ) : (
-          <ChartResults results={results} />
-        )}
       </CustomTabPanel>
     </Box>
   );

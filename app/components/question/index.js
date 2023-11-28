@@ -2,6 +2,7 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import LinearProgress from "@mui/material/LinearProgress";
 import Button from "@mui/material/Button";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import Typography from "@mui/material/Typography";
@@ -12,17 +13,22 @@ import { useState } from "react";
 export default function QuestionarioForm({ data, prueba = false }) {
   const cuestionarioData = data;
   const [opcoe, setOpcoe] = useState({});
+  const [disableBottom, setdisableBottom] = useState(false);
   const [
     retrocederPregunta,
     avanzarPregunta,
     preguntaActual,
     handleSeleccionarOpcion,
     loading
-  ] = useCuestionario(cuestionarioData, prueba);
+  ] = useCuestionario(cuestionarioData, prueba, setdisableBottom)
+
+  console.log(cuestionarioData)
+  const progreso = 20
 
   return (
     <>
     {!loading &&<Box sx={{ height: "100vh" }}>
+    <LinearProgress variant="determinate" value={progreso} sx={{ marginTop: 10 }} />
       <SentimentSatisfiedAltIcon style={{ fontSize: 55, marginBottom: 15 }} />
       <Card sx={{ maxWidth: 800 }}>
         <CardContent>
@@ -82,6 +88,7 @@ export default function QuestionarioForm({ data, prueba = false }) {
                 retrocederPregunta(opcoe);
                 setOpcoe({});
               }}
+              disabled={disableBottom}
             >
               Anterior
             </Button>
@@ -93,9 +100,9 @@ export default function QuestionarioForm({ data, prueba = false }) {
                 handleSeleccionarOpcion(opcoe);
                 setOpcoe({});
               }}
-              disabled={Object.keys(opcoe).length === 0}
+              disabled={Object.keys(opcoe).length === 0 || disableBottom}
             >
-              Próximo
+             {!disableBottom? 'Próximo': 'Mandando Dados'}
             </Button>
           </div>
         </CardContent>

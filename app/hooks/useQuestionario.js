@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import {NotificationManager} from 'react-notifications';
 
-export default function UseCuestionario(cuestionarioData, prueba = false) {
+export default function UseCuestionario(cuestionarioData, prueba = false, setDisableButtom) {
   const [dominioIndex, setDominioIndex] = useState(0);
   const [indicadorIndex, setIndicadorIndex] = useState(0);
   const [preguntaIndex, setPreguntaIndex] = useState(0);
@@ -256,6 +256,7 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
     }
 
     try {
+      setDisableButtom(true)
       await fetch("/api/cuestionario/results", {
         method: 'POST',
         headers: {
@@ -265,6 +266,7 @@ export default function UseCuestionario(cuestionarioData, prueba = false) {
       });
 
       NotificationManager.success('Success message', 'Formulario mandado');
+      setDisableButtom(false)
       router.push("/platform")
     } catch (error) {
       console.log(error)
